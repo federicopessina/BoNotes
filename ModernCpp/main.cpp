@@ -31,6 +31,24 @@ void filter(func f, std::vector<int> arr)
     }
 }
 
+void printInt(int &i)
+{
+    std::cout << "lvalue reference: " << i << std::endl;
+}
+
+void printInt(int &&i)
+{
+    std::cout << "rvalue reference: " << i << std::endl;
+}
+
+// defining the following function will break the rvalue reference overload of printInt(int &&i)
+// because the compiler won't know which function to call when passing an rvalue (like 5) to printInt()
+// void printInt(int i)
+// {
+//     std::cout << "rvalue reference: " << i << std::endl;
+// }
+
+
 int main()
 {
 
@@ -275,10 +293,10 @@ int main()
     auto c0 = "hello";
 
     // C++ 11: use string literal operator to avoid creating temporary string objects
-    auto c2 = u8"hello";    // creates a temporary UTF-8 string literal object
-    auto c3 = u"hello"; // creates a temporary UTF-16 string literal object
-    auto c4 = U"hello"; // creates a temporary UTF-32 string literal object
-    auto c5 = R"(hello)";   // creates a temporary raw string literal object
+    auto c2 = u8"hello";  // creates a temporary UTF-8 string literal object
+    auto c3 = u"hello";   // creates a temporary UTF-16 string literal object
+    auto c4 = U"hello";   // creates a temporary UTF-32 string literal object
+    auto c5 = R"(hello)"; // creates a temporary raw string literal object
 
     // lambda functions
     std::cout << [](int x, int y)
@@ -287,14 +305,15 @@ int main()
     { return x + y; };
     std::cout << f(3, 4) << std::endl; // prints 7
 
-    filter([](int x) {return x > 3;}, v);
+    filter([](int x)
+           { return x > 3; }, v);
 
-    // lambra functions can even access local variables
+    // lambda functions can even access local variables
     int y = 4;
-    filter([&](int x) {return x > y;}, v);
-    // note: [&] tells the compiler that we want variable captured by reference, 
+    filter([&](int x)
+           { return x > y; }, v);
+    // note: [&] tells the compiler that we want variable captured by reference,
     // so that we can access it inside the lambda function
-
 
     std::cout << "end of main" << std::endl;
     return 0;
